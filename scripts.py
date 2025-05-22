@@ -1,7 +1,10 @@
 import random
 
-from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
-                               Schoolkid)
+from datacenter.models import (Chastisement, Commendation, Lesson, Mark,                            
+                                Schoolkid)
+
+
+RANDOM_PRAISE = random.choice(["Хвалю!", "Молодец!", "Хорошая работа!", "Прекрасно!", "Так держать!"])
 
 
 def fix_marks(schoolkid):
@@ -18,15 +21,13 @@ def remove_chastisements(schoolkid):
 
 
 def create_commendation(schoolkid):
-    lessons = list(Lesson.objects.filter(year_of_study=6))
-    praises = ["Хвалю!", "Молодец!", "Хорошая работа!", "Прекрасно!", "Так держать!"]
+        lessons = list(Lesson.objects.filter(year_of_study=6))
 
-    praise = random.choice(praises)
-    subject = random.choice(lessons)
-    Commendation.objects.create(
-        text=praise,
-        created=subject.date,
-        schoolkid=schoolkid,
-        subject=subject.subject,
-        teacher=subject.teacher
-        ) 
+        subject = random.choice(lessons)
+        Commendation.objects.create(
+            text=RANDOM_PRAISE,
+            created=subject.date,
+            schoolkid=schoolkid,
+            subject=subject.subject,
+            teacher=subject.teacher
+            ) 
