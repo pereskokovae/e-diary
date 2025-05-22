@@ -21,13 +21,16 @@ def remove_chastisements(schoolkid):
 
 
 def create_commendation(schoolkid):
+    try:
         lessons = list(Lesson.objects.filter(year_of_study=6))
+    except ObjectDoesNotExist:
+        print("Уроки не найдены")
 
-        subject = random.choice(lessons)
-        Commendation.objects.create(
+    subject = random.choice(lessons)
+    Commendation.objects.create(
             text=RANDOM_PRAISE,
             created=subject.date,
             schoolkid=schoolkid,
             subject=subject.subject,
             teacher=subject.teacher
-            ) 
+            )
