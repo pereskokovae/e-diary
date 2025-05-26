@@ -1,6 +1,6 @@
 import random
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from datacenter.models import (Chastisement, Commendation, Lesson, Mark,                            
                                 Schoolkid)
@@ -9,21 +9,25 @@ from datacenter.models import (Chastisement, Commendation, Lesson, Mark,
 RANDOM_PRAISE = random.choice(["Хвалю!", "Молодец!", "Хорошая работа!", "Прекрасно!", "Так держать!"])
 
 
-def fix_marks(schoolkid):
+def get_schoolkid():
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains="Фролов Иван")
+    except MultipleObjectsReturned:
+        print(f"Найдено больше учеников, а именно {schoolkid.count()}")
     except ObjectDoesNotExist:
         print("Ученик не найден")
-        
+    return schoolkid
+
+
+def fix_marks(schoolkid):  
     bad_marks = Mark.objects.filter(schoolkid=schoolkid, points__lte=3)
     bad_marks.update(points=5)
-    return schoolkid
 
 
 def remove_chastisements(schoolkid):
     child_remarks = Chastisement.objects.filter(schoolkid=schoolkid)
     child_remarks.delete()
-    return schoolkid
+
 
 
 def create_commendation(schoolkid):
@@ -33,7 +37,7 @@ def create_commendation(schoolkid):
         ))
     if not lessons:
         print("Уроки не найдены")
-
+    
     subject = random.choice(lessons)
     Commendation.objects.create(
             text=RANDOM_PRAISE,
@@ -42,3 +46,4 @@ def create_commendation(schoolkid):
             subject=subject.subject,
             teacher=subject.teacher
             )
+    return lessons
