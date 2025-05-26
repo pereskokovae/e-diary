@@ -37,13 +37,13 @@ def create_commendation(schoolkid):
         ))
     if not lessons:
         print("Уроки не найдены")
-    
-    subject = random.choice(lessons)
+
+    lesson_last = sorted(lessons.values()).last()
     Commendation.objects.create(
             text=RANDOM_PRAISE,
-            created=subject.date,
+            created=lesson_last.date,
             schoolkid=schoolkid,
-            subject=subject.subject,
-            teacher=subject.teacher
+            subject=lesson_last.subject,
+            teacher=lesson_last.teacher
             )
     return lessons
